@@ -27,15 +27,20 @@ export async function POST(req) {
 
 export async function PUT(req) {
   await connectToDatabase();
-  const { username, balance } = await req.json();
+  const { username, balance, stocks } = await req.json();
   if (!username || balance == null) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
-  const user = await User.findOneAndUpdate({ username }, { balance }, { new: true });
+  // If stocks is provided, update stocks array as well
+  let update = { balance };
+  if (stocks) {
+    update.stocks = stocks;
+  }
+  const user = await User.findOneAndUpdate({ username }, update, { new: true });
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
-  return NextResponse.json({ success: true, user: { username, balance: user.balance } });
+  return NextResponse.json({ success: true, user: { username, balance: user.balance, stocks: user.stocks } });
 }
 
 export async function DELETE(req) {

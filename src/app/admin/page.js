@@ -116,7 +116,7 @@ export default function AdminPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
-              Admin Panel
+              Users Admin
             </h1>
             <p className="text-purple-300 text-sm md:text-base">Manage users and balances</p>
           </div>

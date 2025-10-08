@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, TrendingUp, LayoutDashboard } from "lucide-react";
+import { Home, LineChart, Gavel } from "lucide-react";
 import Image from "next/image";
 
-export default function AdminNavbar() {
+export default function Navbar() {
   const pathname = usePathname();
   
   const navItems = [
-    { href: "/admin", label: "Users", icon: Users },
-    { href: "/admin/stocks", label: "Stocks", icon: TrendingUp },
-    { href: "/admin/news", label: "News", icon: LayoutDashboard },
-    { href: "/admin/livebids", label: "Live Bids", icon: TrendingUp },
+     { href: "/dashboard", label: "Dashboard", icon: Home },
+     { href: "/bids", label: "Live Bidding", icon: Gavel },
   ];
 
   return (
