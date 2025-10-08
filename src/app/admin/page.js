@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Eye, EyeOff, LogOut } from "lucide-react";
 import Button from "../components/Button";
+import AdminNavbar from "../components/AdminNavbar";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
@@ -11,6 +13,7 @@ export default function AdminPage() {
   const [success, setSuccess] = useState("");
   const [activeTab, setActiveTab] = useState("add");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -34,6 +37,19 @@ export default function AdminPage() {
     setLoading(false);
   }
 
+  async function handleLogout() {
+    setLoading(true);
+    const res = await fetch("/api/logout", {
+      method: "POST",
+    });
+    if (res.ok) {
+      window.location.href = "/";
+    } else {
+      setError("Failed to logout");
+      setLoading(false);
+    }
+  }
+
   async function handleAddUser() {
     setError("");
     setSuccess("");
@@ -45,6 +61,7 @@ export default function AdminPage() {
     });
     const data = await res.json();
     setLoading(false);
+    if (res.status === 409) return setError("Username already exists");
     if (!res.ok) return setError(data.error || "Failed to add user");
     setSuccess("User added successfully!");
     setNewUser({ username: "", password: "", balance: 10000 });
@@ -91,34 +108,43 @@ export default function AdminPage() {
   const totalBalance = users.reduce((sum, u) => sum + u.balance, 0);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-8">
+    <>
+      <AdminNavbar />
+      <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
-            Admin Panel
-          </h1>
-          <p className="text-purple-300 text-sm md:text-base">Manage users and balances</p>
+        {/* Header */}
+        <header className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              Admin Panel
+            </h1>
+            <p className="text-purple-300 text-sm md:text-base">Manage users and balances</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
         </header>
 
-
+        {/* Notifications */}
         {(error || success) && (
-          <div className={`mb-6 p-4 rounded-lg backdrop-blur-sm border animate-pulse ${
+          <div className={`mb-6 p-4 rounded-lg backdrop-blur-sm border ${
             error 
               ? "bg-red-500/20 border-red-500/50 text-red-200" 
               : "bg-green-500/20 border-green-500/50 text-green-200"
           }`}>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">{error ? "!!!" : "✓"}</span>
-              <span>{error || success}</span>
-            </div>
+            {error || success}
           </div>
         )}
 
         <div className="grid md:grid-cols-3 gap-6">
-
+          {/* Left Column - Actions */}
           <div className="md:col-span-2 space-y-6">
-
+            {/* Tab Navigation */}
             <div className="flex gap-2 bg-purple-950/50 p-2 rounded-lg backdrop-blur-sm border border-purple-700/50">
               <button
                 onClick={() => setActiveTab("add")}
@@ -152,13 +178,11 @@ export default function AdminPage() {
               </button>
             </div>
 
-
+            {/* Tab Content */}
             <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
               {activeTab === "add" && (
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-2xl">➕</span> Add New User
-                  </h2>
+                  <h2 className="text-2xl font-semibold mb-4">Add New User</h2>
                   <div className="flex flex-col gap-4">
                     <div>
                       <label className="block text-sm text-purple-300 mb-1">Username</label>
@@ -172,13 +196,22 @@ export default function AdminPage() {
                     </div>
                     <div>
                       <label className="block text-sm text-purple-300 mb-1">Password</label>
-                      <input
-                        type="password"
-                        placeholder="Enter password"
-                        value={newUser.password}
-                        onChange={e => setNewUser(u => ({ ...u, password: e.target.value }))}
-                        className="w-full px-4 py-3 rounded-lg bg-purple-900/50 text-white border border-purple-700 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
-                      />
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter password"
+                          value={newUser.password}
+                          onChange={e => setNewUser(u => ({ ...u, password: e.target.value }))}
+                          className="w-full px-4 py-3 pr-12 rounded-lg bg-purple-900/50 text-white border border-purple-700 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-200 transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm text-purple-300 mb-1">Initial Balance</label>
@@ -199,9 +232,7 @@ export default function AdminPage() {
 
               {activeTab === "update" && (
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                  Update Balance
-                  </h2>
+                  <h2 className="text-2xl font-semibold mb-4">Update Balance</h2>
                   <div className="flex flex-col gap-4">
                     <div>
                       <label className="block text-sm text-purple-300 mb-1">Select User</label>
@@ -237,9 +268,7 @@ export default function AdminPage() {
 
               {activeTab === "delete" && (
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-2xl"></span> Delete User
-                  </h2>
+                  <h2 className="text-2xl font-semibold mb-4">Delete User</h2>
                   <div className="flex flex-col gap-4">
                     <div>
                       <label className="block text-sm text-purple-300 mb-1">Select User</label>
@@ -257,7 +286,7 @@ export default function AdminPage() {
                       </select>
                     </div>
                     <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-sm text-red-200">
-                      This action cannot be undone
+                      Warning: This action cannot be undone
                     </div>
                     <div onClick={handleDeleteUser}>
                       <Button text={loading ? "Deleting..." : "Delete User"} color="#4b006e" textColor="#fff" glowColor="#ff00cc" rippleColor="rgba(255,255,255,0.2)" />
@@ -268,7 +297,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-
+          {/* Right Column - User List & Stats */}
           <div className="space-y-6">
             {/* Stats Card */}
             <div className="bg-gradient-to-br from-purple-600/30 to-pink-600/30 backdrop-blur-sm rounded-lg border border-purple-500/50 p-6">
@@ -291,7 +320,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-
+            {/* Users List */}
             <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">All Users</h3>
@@ -300,7 +329,7 @@ export default function AdminPage() {
                   className="text-purple-300 hover:text-white transition-colors text-sm"
                   disabled={loading}
                 >
-                  {loading ? "⟳" : "↻"} Refresh
+                  {loading ? "Loading..." : "Refresh"}
                 </button>
               </div>
               <div className="max-h-96 overflow-y-auto space-y-2">
@@ -326,6 +355,7 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

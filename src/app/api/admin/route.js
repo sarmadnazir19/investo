@@ -15,6 +15,10 @@ export async function POST(req) {
   if (!username || !password || balance == null) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
+  const existing = await User.findOne({ username });
+  if (existing) {
+    return NextResponse.json({ error: "Username already exists" }, { status: 409 });
+  }
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new User({ username, password: hashedPassword, balance, stocks: [] });
   await user.save();

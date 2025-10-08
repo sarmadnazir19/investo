@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Stonks - JT Empressario&#39;25",
-  description: "The Website for Stonks - JT Empressario&#39;25",
+  title: "Stonks - JT Empressario'25",
+  description: "The Website for Stonks - JT Empressario'25",
 };
 
 export default function RootLayout({ children }) {

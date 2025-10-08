@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "../_db";
 import User from "../userModel";
 import bcrypt from "bcryptjs";
+import { createAuthToken, setAuthCookie } from "../../lib/auth";
 
 export async function POST(req) {
 	await connectToDatabase();
@@ -15,7 +16,14 @@ export async function POST(req) {
 			return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
 		}
 	// Set a simple session cookie (for demo, not secure for production)
-	const response = NextResponse.json({ success: true, user: { username: user.username, balance: user.balance, stocks: user.stocks } });
-	response.cookies.set("user", JSON.stringify({ username: user.username }), { path: "/", httpOnly: true });
-	return response;
+			let tokenType = "user";
+			let isAdmin = false;
+			if (username === "StonksAdmin" && password === "StonksAdmin4321!") {
+				tokenType = "admin";
+				isAdmin = true;
+			}
+			const token = createAuthToken(user.username, isAdmin);
+			const response = NextResponse.json({ success: true, user: { username: user.username, balance: user.balance, stocks: user.stocks }, tokenType });
+			setAuthCookie(response, token);
+			return response;
 }
