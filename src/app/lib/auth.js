@@ -26,7 +26,7 @@ export function createAuthToken(username, isAdmin = false) {
  * @param {string} token - Authentication token
  */
 export function setAuthCookie(response, token) {
-  response.cookies.set('auth', token, {
+  response.cookies.set('auth_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
@@ -60,8 +60,7 @@ export function verifyAuthToken(token) {
  * @returns {Object|null} User info or null
  */
 export function getUserFromRequest(request) {
-  const authCookie = request.cookies.get('auth');
+  const authCookie = request.cookies.get('auth_token');
   if (!authCookie) return null;
-  
   return verifyAuthToken(authCookie.value);
 }
