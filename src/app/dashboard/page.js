@@ -84,13 +84,20 @@ export default function DashboardPage() {
   const [selectedStock, setSelectedStock] = useState("");
   const [quantity, setQuantity] = useState("");
   const [activeTab, setActiveTab] = useState("trade");
+  const [tabContentKey, setTabContentKey] = useState(0);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Remount tab content to replay fade-in animation on tab switch
+  useEffect(() => {
+    setTabContentKey(prev => prev + 1);
+  }, [activeTab]);
 
   useEffect(() => {
     if (error || success) {
@@ -149,9 +156,20 @@ export default function DashboardPage() {
 
   return (
     <>
-    <Navbar />
+    {/* Fade-in animation style for tab content */}
+    <style>{`
+      .animate-fadein {
+        animation: fadein 1.2s cubic-bezier(.4,0,.2,1);
+      }
+      @keyframes fadein {
+        0% { opacity: 0; transform: translateY(32px) scale(0.98); }
+        60% { opacity: 0.7; transform: translateY(8px) scale(1.01); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+    `}</style>
+    <Navbar onLogout={handleLogout} loading={loading} />
       <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto" style={{ width: '95vw', maxWidth: '1800px' }}>
           <header className="mb-8 flex justify-between items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
@@ -161,14 +179,6 @@ export default function DashboardPage() {
                 Welcome {user.username}, your available Balance is: <span className="font-bold text-green-400">${user.balance?.toLocaleString()}</span>
               </p>
             </div>
-            <button
-              onClick={handleLogout}
-              disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <LogOut size={18} />
-              <span>Logout</span>
-            </button>
           </header>
 
         {/* Notifications */}
@@ -182,12 +192,11 @@ export default function DashboardPage() {
           </div>
         )}
 
-
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Left Column - Trading & Holdings */}
+          {/* Left Column - Tabs: Trade, Holdings, News, Stocks */}
           <div className="md:col-span-2 space-y-6">
             {/* Tab Navigation */}
-            <div className="flex gap-2 bg-purple-950/50 p-2 rounded-lg backdrop-blur-sm border border-purple-700/50">
+            <div className="flex gap-2 bg-purple-950/50 p-2 rounded-lg backdrop-blur-sm border border-purple-700/50" style={{ width: '95vw', maxWidth: '1800px' }}>
               <button
                 onClick={() => setActiveTab("trade")}
                 className={`flex-1 py-2 px-4 rounded-md transition-all ${
@@ -208,10 +217,34 @@ export default function DashboardPage() {
               >
                 Holdings
               </button>
+              <button
+                onClick={() => setActiveTab("news")}
+                className={`flex-1 py-2 px-4 rounded-md transition-all ${
+                  activeTab === "news"
+                    ? "bg-purple-600 text-white shadow-lg shadow-purple-500/50"
+                    : "text-purple-300 hover:bg-purple-800/50"
+                }`}
+              >
+                News
+              </button>
+              <button
+                onClick={() => setActiveTab("stocks")}
+                className={`flex-1 py-2 px-4 rounded-md transition-all ${
+                  activeTab === "stocks"
+                    ? "bg-purple-600 text-white shadow-lg shadow-purple-500/50"
+                    : "text-purple-300 hover:bg-purple-800/50"
+                }`}
+              >
+                Stocks
+              </button>
             </div>
 
             {/* Tab Content */}
-            <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
+            <div
+              className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6 animate-fadein"
+              style={{ width: '95vw', maxWidth: '1800px' }}
+              key={tabContentKey}
+            >
               {activeTab === "trade" && (
                 <div>
                   <h2 className="text-2xl font-semibold mb-4">Trade Stocks</h2>
@@ -318,7 +351,7 @@ export default function DashboardPage() {
                               </div>
                               <div>
                                 <div className="text-purple-400">Avg Price</div>
-                                <div className="font-semibold">${holding.avgPrice.toFixed(2)}</div>
+                                <div className="font-semibold">{holding.avgPrice.toFixed(2)}</div>
                               </div>
                             </div>
                           </div>
@@ -328,37 +361,63 @@ export default function DashboardPage() {
                   )}
                 </div>
               )}
-            </div>
-          </div>
 
-          {/* Right Column - Stocks & News */}
-          <div className="space-y-6">
-            {/* Available Stocks */}
-            <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={20} className="text-purple-400" />
-                <h3 className="text-lg font-semibold">Available Stocks</h3>
-              </div>
-              <div className="space-y-2 max-h-80 overflow-y-auto">
-                {stocks.length === 0 ? (
-                  <div className="text-center text-purple-400 py-8">No stocks available</div>
-                ) : (
-                  stocks.map(s => (
-                    <div
-                      key={s._id}
-                      className="p-3 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 transition-all border border-purple-700/30 cursor-pointer"
-                      onClick={() => setSelectedStock(s._id)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">{s.StockName}</span>
-                        <span className="text-green-400 font-bold">${s.StockValue}</span>
+              {activeTab === "news" && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Latest News</h2>
+                  {news.length === 0 ? (
+                    <div className="text-center text-purple-400 py-8">No news available</div>
+                  ) : (
+                    <>
+                      {/* Headline: Latest news */}
+                      <div className="mb-6 p-4 rounded-lg bg-purple-900/30 border border-purple-700/30">
+                        <div className="font-bold text-purple-100 text-xl mb-1">{news[0].title}</div>
+                        <div className="text-purple-300 text-base mb-2">{news[0].body || news[0].content}</div>
+                        <div className="text-xs text-purple-400">{news[0].date ? new Date(news[0].date).toLocaleString() : ""}</div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+                      {/* All News except headline */}
+                      <div className="max-h-64 overflow-y-auto space-y-2">
+                        {news.slice(1).length === 0 ? (
+                          <div className="text-center text-purple-400 py-4">No more news</div>
+                        ) : (
+                          news.slice(1).map(n => (
+                            <div key={n._id} className="p-3 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 transition-all border border-purple-700/30">
+                              <div className="font-medium text-purple-100 mb-1">{n.title}</div>
+                              <div className="text-sm text-purple-300 line-clamp-2">{n.body || n.content}</div>
+                              <div className="text-xs text-purple-400 mt-2">{n.date ? new Date(n.date).toLocaleString() : ""}</div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
+              {activeTab === "stocks" && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Available Stocks</h2>
+                  <div className="space-y-2 max-h-80 overflow-y-auto">
+                    {stocks.length === 0 ? (
+                      <div className="text-center text-purple-400 py-8">No stocks available</div>
+                    ) : (
+                      stocks.map(s => (
+                        <div
+                          key={s._id}
+                          className="p-3 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 transition-all border border-purple-700/30 cursor-pointer"
+                          onClick={() => setSelectedStock(s._id)}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">{s.StockName}</span>
+                            <span className="text-green-400 font-bold">${s.StockValue}</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

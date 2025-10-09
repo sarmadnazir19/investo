@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LineChart, Gavel } from "lucide-react";
+import { Home, LineChart, Gavel,LogOut } from "lucide-react";
 import Image from "next/image";
 
-export default function Navbar() {
+export default function Navbar({ onLogout, loading }) {
   const pathname = usePathname();
-  
   const navItems = [
-     { href: "/dashboard", label: "Dashboard", icon: Home },
-     { href: "/bids", label: "Live Bidding", icon: Gavel },
+    { href: "/dashboard", label: "Dashboard", icon: Home },
+    { href: "/bids", label: "Live Bidding", icon: Gavel },
   ];
 
   return (
@@ -25,12 +24,11 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex gap-2">
+          {/* Navigation Links & Logout */}
+          <div className="flex gap-2 items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
-              
               return (
                 <Link
                   key={item.href}
@@ -48,6 +46,17 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {/* Logout Button */}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                disabled={loading}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-700 via-purple-600 to-pink-500 hover:from-purple-800 hover:to-pink-600 text-white rounded-lg font-semibold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed ml-2 border border-purple-500/50"
+              >
+                <LogOut size={18} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
