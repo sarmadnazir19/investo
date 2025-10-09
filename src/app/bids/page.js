@@ -72,7 +72,7 @@ export default function LiveBidsPage() {
     <Navbar />
     <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+
         <header className="mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Gavel className="text-purple-400" size={32} />
@@ -89,7 +89,7 @@ export default function LiveBidsPage() {
           )}
         </header>
 
-        {/* Notifications */}
+
         {(error || success) && (
           <div className={`mb-4 p-3 rounded-lg backdrop-blur-sm border text-sm flex items-start gap-2 ${
             error 
@@ -101,7 +101,7 @@ export default function LiveBidsPage() {
           </div>
         )}
 
-        {/* Stats */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-gradient-to-br from-purple-600/30 to-pink-600/30 backdrop-blur-sm rounded-lg border border-purple-500/50 p-4">
             <div className="flex items-center justify-between">
@@ -140,7 +140,7 @@ export default function LiveBidsPage() {
           </div>
         </div>
 
-        {/* Bids Grid */}
+
         {loading && activeBids.length === 0 ? (
           <div className="text-center py-12 text-purple-400">
             <Clock className="animate-pulse mx-auto mb-3" size={32} />
@@ -183,7 +183,7 @@ function BidCard({ bid, user, bidValue, setBidValue, onPlaceBid, loading }) {
 
   return (
     <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-lg border border-purple-500/50 p-4 hover:shadow-lg transition-all">
-      {/* Header */}
+
       <div className="flex items-start justify-between mb-3">
         <div>
           <h3 className="text-2xl font-bold mb-1">{bid.stockName}</h3>
@@ -195,7 +195,6 @@ function BidCard({ bid, user, bidValue, setBidValue, onPlaceBid, loading }) {
         <TrendingUp className="text-purple-400" size={24} />
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="bg-black/30 rounded-lg p-2">
           <p className="text-purple-300 text-xs">Price</p>
@@ -211,7 +210,7 @@ function BidCard({ bid, user, bidValue, setBidValue, onPlaceBid, loading }) {
         </div>
       </div>
 
-      {/* Highest Bid */}
+
       {bid.bids?.length > 0 && (
         <div className="mb-3 p-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <div className="flex items-center justify-between">
@@ -227,7 +226,7 @@ function BidCard({ bid, user, bidValue, setBidValue, onPlaceBid, loading }) {
         </div>
       )}
 
-      {/* Bid Input */}
+
       <div className="mb-3">
         <label className="block text-xs text-purple-300 mb-1">Your Bid Amount</label>
         <div className="flex gap-2">
@@ -252,7 +251,7 @@ function BidCard({ bid, user, bidValue, setBidValue, onPlaceBid, loading }) {
         </div>
       </div>
 
-      {/* Bids List */}
+
       <div className="pt-3 border-t border-white/10">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5 text-purple-300">

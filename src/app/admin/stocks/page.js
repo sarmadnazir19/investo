@@ -118,7 +118,7 @@ export default function StocksAdminPage() {
       <AdminNavbar />
       <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
+
           <header className="mb-8 flex justify-between items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
@@ -136,7 +136,7 @@ export default function StocksAdminPage() {
             </button>
           </header>
 
-          {/* Notifications */}
+
           {(error || success) && (
             <div className={`mb-6 p-4 rounded-lg backdrop-blur-sm border ${
               error 
@@ -148,9 +148,9 @@ export default function StocksAdminPage() {
           )}
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Left Column - Actions */}
+
             <div className="md:col-span-2 space-y-6">
-              {/* Tab Navigation */}
+
               <div className="flex gap-2 bg-purple-950/50 p-2 rounded-lg backdrop-blur-sm border border-purple-700/50">
                 <button
                   onClick={() => setActiveTab("add")}
@@ -184,7 +184,7 @@ export default function StocksAdminPage() {
                 </button>
               </div>
 
-              {/* Tab Content */}
+
               <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
                 {activeTab === "add" && (
                   <div>
@@ -288,9 +288,9 @@ export default function StocksAdminPage() {
               </div>
             </div>
 
-            {/* Right Column - Stock List & Stats */}
+
             <div className="space-y-6">
-              {/* Stats Card */}
+
               <div className="bg-gradient-to-br from-purple-600/30 to-pink-600/30 backdrop-blur-sm rounded-lg border border-purple-500/50 p-6">
                 <h3 className="text-lg font-semibold mb-4">Statistics</h3>
                 <div className="space-y-3">
@@ -311,7 +311,7 @@ export default function StocksAdminPage() {
                 </div>
               </div>
 
-              {/* Stocks List */}
+
               <div className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">All Stocks</h3>

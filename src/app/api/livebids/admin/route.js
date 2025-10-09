@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "../../_db";
 import LiveBid from "../../liveBidModel";
 
-// GET: Admin fetches all bids for a live bid
+
 export async function GET(req) {
   await connectToDatabase();
   const { searchParams } = new URL(req.url);

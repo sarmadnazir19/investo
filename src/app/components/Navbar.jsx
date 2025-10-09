@@ -14,7 +14,7 @@ export default function Navbar({ onLogout, loading }) {
     <nav className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-950 border-b border-purple-700/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo/Brand */}
+
           <div className="flex items-center gap-2">
             <div className="w-12 h-12 rounded-lg flex items-center justify-center">
               <Image src="/assets/emp.png" alt="Emp Logo" width={48} height={48} className="text-white" />
@@ -24,7 +24,7 @@ export default function Navbar({ onLogout, loading }) {
             </span>
           </div>
 
-          {/* Navigation Links & Logout */}
+ 
           <div className="flex gap-2 items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -46,7 +46,7 @@ export default function Navbar({ onLogout, loading }) {
                 </Link>
               );
             })}
-            {/* Logout Button */}
+ 
             {onLogout && (
               <button
                 onClick={onLogout}

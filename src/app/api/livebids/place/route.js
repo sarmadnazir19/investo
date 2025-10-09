@@ -3,7 +3,7 @@ import { connectToDatabase } from "../../_db";
 import LiveBid from "../../liveBidModel";
 
 
-// POST: User places a bid for a live bid
+
 export async function POST(req) {
   await connectToDatabase();
   const { id, user, value } = await req.json();
@@ -20,7 +20,7 @@ export async function POST(req) {
   // Check if user already placed a bid
   const existing = bid.bids.find(b => b.user === user);
   if (existing) {
-    existing.value = value; // Update bid value
+    existing.value = value; 
   } else {
     bid.bids.push({ user, value });
   }

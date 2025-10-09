@@ -181,7 +181,7 @@ export default function DashboardPage() {
             </div>
           </header>
 
-        {/* Notifications */}
+
         {(error || success) && (
           <div className={`mb-6 p-4 rounded-lg backdrop-blur-sm border ${
             error 
@@ -193,9 +193,9 @@ export default function DashboardPage() {
         )}
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Left Column - Tabs: Trade, Holdings, News, Stocks */}
+      
           <div className="md:col-span-2 space-y-6">
-            {/* Tab Navigation */}
+
             <div className="flex gap-2 bg-purple-950/50 p-2 rounded-lg backdrop-blur-sm border border-purple-700/50" style={{ width: '95vw', maxWidth: '1800px' }}>
               <button
                 onClick={() => setActiveTab("trade")}
@@ -239,7 +239,7 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* Tab Content */}
+
             <div
               className="bg-purple-950/50 backdrop-blur-sm rounded-lg border border-purple-700/50 p-6 animate-fadein"
               style={{ width: '95vw', maxWidth: '1800px' }}
@@ -296,20 +296,20 @@ export default function DashboardPage() {
                       <div onClick={handleBuy}>
                         <Button
                           text={loading ? "Buying..." : "Buy"}
-                          color="#7c3aed" // purple
+                          color="#7c3aed" 
                           textColor="#fff"
-                          glowColor="#10b981" // green glow
-                          rippleColor="rgba(124,58,237,0.2)" // purple ripple
+                          glowColor="#10b981" 
+                          rippleColor="rgba(124,58,237,0.2)" 
                           className="shadow-[0_0_10px_2px_#10b981] mx-0.5"
                         />
                       </div>
                       <div onClick={handleSell}>
                         <Button
                           text={loading ? "Selling..." : "Sell"}
-                          color="#7c3aed" // purple
+                          color="#7c3aed" 
                           textColor="#fff"
-                          glowColor="#ef4444" // red glow
-                          rippleColor="rgba(124,58,237,0.2)" // purple ripple
+                          glowColor="#ef4444" 
+                          rippleColor="rgba(124,58,237,0.2)" 
                           className="shadow-[0_0_10px_2px_#ef4444] mx-0.5"
                         />
                       </div>
@@ -369,13 +369,13 @@ export default function DashboardPage() {
                     <div className="text-center text-purple-400 py-8">No news available</div>
                   ) : (
                     <>
-                      {/* Headline: Latest news */}
+ 
                       <div className="mb-6 p-4 rounded-lg bg-purple-900/30 border border-purple-700/30">
                         <div className="font-bold text-purple-100 text-xl mb-1">{news[0].title}</div>
                         <div className="text-purple-300 text-base mb-2">{news[0].body || news[0].content}</div>
                         <div className="text-xs text-purple-400">{news[0].date ? new Date(news[0].date).toLocaleString() : ""}</div>
                       </div>
-                      {/* All News except headline */}
+        
                       <div className="max-h-64 overflow-y-auto space-y-2">
                         {news.slice(1).length === 0 ? (
                           <div className="text-center text-purple-400 py-4">No more news</div>

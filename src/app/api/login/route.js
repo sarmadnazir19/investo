@@ -15,7 +15,6 @@ export async function POST(req) {
 		if (!user || !(await bcrypt.compare(password, user.password))) {
 			return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
 		}
-	// Set a simple session cookie (for demo, not secure for production)
 			let tokenType = "user";
 			let isAdmin = false;
 			if (username === "StonksAdmin" && password === "StonksAdmin4321!") {
@@ -24,6 +23,12 @@ export async function POST(req) {
 			}
 			const token = createAuthToken(user.username, isAdmin);
 			const response = NextResponse.json({ success: true, user: { username: user.username, balance: user.balance, stocks: user.stocks }, tokenType });
-			setAuthCookie(response, token);
+			response.cookies.set("auth_token", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "strict",
+				path: "/",
+				maxAge: 60 * 60 * 24 * 7, // 7 days
+			});
 			return response;
 }

@@ -7,13 +7,12 @@ export async function POST(req) {
       { status: 200 }
     );
     
-    // Clear the authentication cookie
-    // Adjust cookie name and options based on your auth implementation
-    response.cookies.set('auth', '', {
+    // Clear the authentication cookie to match login session logic
+    response.cookies.set('auth_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      expires: new Date(0), // Set expiry to past date
+      expires: new Date(0),
       path: '/',
     });
     

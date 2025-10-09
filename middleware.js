@@ -1,30 +1,26 @@
-// middleware.js (place in root directory)
 import { NextResponse } from 'next/server';
+import { verifyAuthToken } from './src/app/lib/auth';
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   
-  // Get authentication cookie 
-  const authCookie = request.cookies.get('auth');
+
+  const authCookie = request.cookies.get('auth_token');
   let token = authCookie?.value;
-  
-    let isAuthenticated = !!token;
-    let username = null;
-    let isAdmin = false;
-    let tokenType = null;
-  
+
+  let isAuthenticated = false;
+  let username = null;
+  let isAdmin = false;
+  let tokenType = null;
+
   if (token) {
-    try {
-      const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const decoded = verifyAuthToken(token);
+    if (decoded) {
+      isAuthenticated = true;
       username = decoded.username;
       isAdmin = decoded.isAdmin || username === 'StonksAdmin';
-        tokenType = isAdmin ? "admin" : "user";
-      } catch (error) {
-        isAuthenticated = false;
-        token = null;
-      }
-    } else {
-      isAuthenticated = false;
+      tokenType = isAdmin ? "admin" : "user";
+    }
   }
   
   // Protect /admin route 
@@ -47,11 +43,10 @@ export function middleware(request) {
     return NextResponse.next();
   }
   
-  // Allow all other routes
+
   return NextResponse.next();
 }
 
-// Configure which routes to run middleware on
 export const config = {
   matcher: [
     '/admin',
