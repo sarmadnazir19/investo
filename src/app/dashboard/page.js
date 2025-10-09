@@ -169,14 +169,14 @@ export default function DashboardPage() {
     `}</style>
     <Navbar onLogout={handleLogout} loading={loading} />
       <main className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white p-4 md:p-8">
-        <div className="mx-auto" style={{ width: '95vw', maxWidth: '1800px' }}>
-          <header className="mb-8 flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+        <div className="mx-auto px-2 sm:px-4" style={{ width: '100vw', maxWidth: '1800px' }}>
+          <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div className="w-full">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent text-center sm:text-left">
                 Trading Dashboard
               </h1>
-              <p className="text-purple-300 text-sm md:text-base">
-                Welcome {user.username}, your available Balance is: <span className="font-bold text-green-400">${user.balance?.toLocaleString()}</span>
+              <p className="text-purple-300 text-xs sm:text-sm md:text-base text-center sm:text-left">
+                Welcome <span className="font-bold text-purple-100">{user.username}</span>, your available Balance is: <span className="font-bold text-green-400">${user.balance?.toLocaleString()}</span>
               </p>
             </div>
           </header>
