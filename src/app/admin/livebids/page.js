@@ -57,6 +57,7 @@ export default function AdminLiveBidsPage() {
     fetchBids();
   }
 
+
   async function updateBid(id, action) {
     setLoading(true);
     await fetch("/api/livebids", {
@@ -66,6 +67,20 @@ export default function AdminLiveBidsPage() {
     });
     setLoading(false);
     fetchBids();
+  }
+
+  async function deleteBid(id) {
+    setLoading(true);
+    const res = await fetch(`/api/livebids?id=${id}`, {
+      method: "DELETE",
+    });
+    setLoading(false);
+    if (res.ok) {
+      setSuccess("Bid deleted");
+      fetchBids();
+    } else {
+      setError("Failed to delete bid");
+    }
   }
 
   async function awardBid(id) {
@@ -237,6 +252,7 @@ export default function AdminLiveBidsPage() {
                     updateBid={updateBid}
                     awardBid={awardBid}
                     fetchBidUsers={fetchBidUsers}
+                    deleteBid={deleteBid}
                     loading={loading}
                   />
                 ))}
@@ -250,7 +266,9 @@ export default function AdminLiveBidsPage() {
   );
 }
 
-function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
+
+function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }) {
+  const [showConfirm, setShowConfirm] = useState(false);
   const statusColors = {
     active: "from-green-600/30 to-emerald-600/30 border-green-500/50",
     inactive: "from-yellow-600/30 to-orange-600/30 border-yellow-500/50",
@@ -274,7 +292,6 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
               {bid.status}
             </span>
           </div>
-          
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-black/20 rounded-lg p-2">
               <p className="text-purple-300 text-xs">Value</p>
@@ -285,7 +302,6 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
               <p className="text-lg font-bold">{bid.quantity}</p>
             </div>
           </div>
-
           {bid.status === "awarded" && bid.winner && (
             <div className="mt-2 p-2 bg-green-500/20 border border-green-500/50 rounded-lg">
               <p className="text-green-300 text-xs flex items-center gap-1">
@@ -295,7 +311,6 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
             </div>
           )}
         </div>
-
         <div className="flex flex-col gap-1.5 ml-3">
           {bid.status === "inactive" && (
             <button
@@ -307,7 +322,6 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
               Start
             </button>
           )}
-          
           {bid.status === "active" && (
             <button
               onClick={() => updateBid(bid._id, "stop")}
@@ -318,7 +332,6 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
               Stop
             </button>
           )}
-          
           {bid.status === "inactive" && (
             <button
               onClick={() => awardBid(bid._id)}
@@ -329,9 +342,25 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, loading }) {
               Award
             </button>
           )}
+          {/* Delete Button - always available */}
+          <button
+            onClick={() => {
+              if (!showConfirm) {
+                setShowConfirm(true);
+                setTimeout(() => setShowConfirm(false), 3000);
+              } else {
+                setShowConfirm(false);
+                deleteBid(bid._id);
+              }
+            }}
+            disabled={loading}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-all disabled:opacity-50 whitespace-nowrap mt-1 ${showConfirm ? "bg-red-400 hover:bg-red-500 text-white" : "bg-red-600 hover:bg-red-700 text-white"}`}
+          >
+            <Square size={14} />
+            {showConfirm ? "Confirm?" : "Delete"}
+          </button>
         </div>
       </div>
-
       <div className="pt-3 border-t border-white/10">
         <div className="flex items-center gap-1.5 mb-2 text-purple-300">
           <Users size={14} />

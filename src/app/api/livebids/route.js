@@ -2,7 +2,16 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "../_db";
 import LiveBid from "../liveBidModel";
 import User from "../userModel";
-
+// DELETE: Admin deletes a live bid
+export async function DELETE(req) {
+  await connectToDatabase();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  const bid = await LiveBid.findByIdAndDelete(id);
+  if (!bid) return NextResponse.json({ error: "Bid not found" }, { status: 404 });
+  return NextResponse.json({ success: true });
+}
 // GET: Fetch all live bids
 export async function GET() {
   await connectToDatabase();
