@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "../../_db";
 import LiveBid from "../../liveBidModel";
+import User from "../../userModel";
 
 
 
@@ -17,6 +18,18 @@ export async function POST(req) {
   if (Number(value) <= minBid) {
     return NextResponse.json({ error: `Bid must be greater than $${minBid} (qty x value)` }, { status: 400 });
   }
+
+  // Check if user has sufficient funds
+  const userData = await User.findOne({ username: user });
+  if (!userData) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+  if (userData.balance < Number(value)) {
+    return NextResponse.json({ 
+      error: `Insufficient funds. Your balance: $${userData.balance.toLocaleString()}, Required: $${Number(value).toLocaleString()}` 
+    }, { status: 400 });
+  }
+
   // Check if user already placed a bid
   const existing = bid.bids.find(b => b.user === user);
   if (existing) {
