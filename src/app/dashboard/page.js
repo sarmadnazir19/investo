@@ -143,7 +143,13 @@ export default function DashboardPage() {
   const totalCost = selectedStockData ? selectedStockData.StockValue * Number(quantity || 0) : 0;
   const portfolioValue = holdings.reduce((sum, h) => {
     const stock = stocks.find(s => s._id === h.stockId);
-    return sum + (stock ? stock.StockValue * h.quantity : 0);
+    if (stock) {
+      return sum + (stock.StockValue * h.quantity);
+    } else if (h.stockId && h.stockId.startsWith("bid:")) {
+      // Live bid holding - use average price since there's no current market price
+      return sum + (h.avgPrice * h.quantity);
+    }
+    return sum;
   }, 0);
 
   if (!user) {
@@ -364,6 +370,40 @@ export default function DashboardPage() {
                     <div className="space-y-2">
                       {holdings.map((holding) => {
                         const stock = stocks.find(s => s._id === holding.stockId);
+                        const isLiveBidStock = holding.stockId && holding.stockId.startsWith("bid:");
+                        
+                        // For live bid stocks, use stored values
+                        if (isLiveBidStock) {
+                          const currentValue = holding.avgPrice * holding.quantity;
+                          return (
+                            <div key={holding.stockId} className="holding-card border border-purple-700/50 rounded-xl p-3 transition-all duration-300 shadow-lg relative">
+                              <div className="absolute top-2 right-2 px-2 py-0.5 bg-blue-500/20 border border-blue-500/50 rounded-full">
+                                <span className="text-[10px] font-semibold text-blue-300">LIVE BID</span>
+                              </div>
+                              <div className="flex justify-between items-start mb-2">
+                                <div>
+                                  <h3 className="text-lg font-bold text-white mb-0.5">{holding.stockName}</h3>
+                                  <p className="text-xs text-purple-300">{holding.quantity} shares</p>
+                                </div>
+                                <div className="text-right mt-5">
+                                  <div className="text-lg font-bold text-green-400">${currentValue.toLocaleString()}</div>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div className="bg-black/20 rounded-lg p-2">
+                                  <div className="text-purple-400 mb-0.5">Purchase Price</div>
+                                  <div className="font-bold text-white">${holding.avgPrice.toFixed(2)}</div>
+                                </div>
+                                <div className="bg-black/20 rounded-lg p-2">
+                                  <div className="text-purple-400 mb-0.5">Total Value</div>
+                                  <div className="font-bold text-white">${currentValue.toLocaleString()}</div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        
+                        // Regular stock from market
                         if (!stock) return null;
                         const currentValue = stock.StockValue * holding.quantity;
                         return (

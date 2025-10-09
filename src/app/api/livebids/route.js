@@ -50,28 +50,59 @@ export async function PUT(req) {
   if (action === "award") {
     if (!bid.bids.length) return NextResponse.json({ error: "No bids placed" }, { status: 400 });
 
+    // Find the highest bid
     const highest = bid.bids.reduce((max, b) => b.value > max.value ? b : max, bid.bids[0]);
+    
+    // Mark bid as awarded
     bid.status = "awarded";
     bid.winner = highest.user;
     await bid.save();
 
+
     const user = await User.findOne({ username: highest.user });
     if (!user) return NextResponse.json({ error: "Winner not found" }, { status: 404 });
-    if (user.balance < highest.value) return NextResponse.json({ error: "Insufficient balance for winner" }, { status: 400 });
+    
+
+    if (user.balance < highest.value) {
+      return NextResponse.json({ error: "Insufficient balance for winner" }, { status: 400 });
+    }
+    
+
     user.balance -= highest.value;
+
 
     let holdings = Array.isArray(user.stocks) ? [...user.stocks] : [];
     const idx = holdings.findIndex(h => h.stockName === bid.stockName);
+    
     if (idx >= 0) {
-      holdings[idx].quantity += bid.quantity;
 
-      holdings[idx].avgPrice = ((holdings[idx].avgPrice * holdings[idx].quantity) + highest.value) / (holdings[idx].quantity + bid.quantity);
+      const prevQty = holdings[idx].quantity;
+      const prevAvg = holdings[idx].avgPrice;
+      const newQty = prevQty + bid.quantity;
+      const newAvg = ((prevAvg * prevQty) + highest.value) / newQty;
+      
+      holdings[idx].quantity = newQty;
+      holdings[idx].avgPrice = newAvg;
     } else {
-      holdings.push({ stockId: "bid:"+bid._id, stockName: bid.stockName, quantity: bid.quantity, avgPrice: highest.value });
+
+      holdings.push({ 
+        stockId: "bid:" + bid._id, 
+        stockName: bid.stockName, 
+        quantity: bid.quantity, 
+        avgPrice: highest.value / bid.quantity 
+      });
     }
+    
     user.stocks = holdings;
     await user.save();
-    return NextResponse.json({ success: true, winner: highest.user });
+    
+    return NextResponse.json({ 
+      success: true, 
+      winner: highest.user, 
+      bidAmount: highest.value,
+      quantity: bid.quantity,
+      stockName: bid.stockName
+    });
   }
   return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

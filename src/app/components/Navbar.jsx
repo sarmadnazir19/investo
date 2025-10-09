@@ -14,7 +14,7 @@ export default function Navbar({ onLogout, loading }) {
     <nav className="bg-gradient-to-r from-purple-950/95 via-purple-900/95 to-purple-950/95 border-b border-purple-700/30 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-purple-900/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 sm:h-18">
-          {/* Logo & Title */}
+
           <div className="flex items-center gap-3 group">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm flex items-center justify-center border border-purple-500/30 shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all duration-300 group-hover:scale-110">
               <Image 
@@ -26,11 +26,11 @@ export default function Navbar({ onLogout, loading }) {
               />
             </div>
             <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-300 bg-clip-text text-transparent drop-shadow-lg animate-gradient">
-              $TONKS - JT Empressario'25
+              $TONK$ - JT Empressario'25
             </span>
           </div>
 
-          {/* Navigation Items */}
+
           <div className="flex gap-2 items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -68,7 +68,7 @@ export default function Navbar({ onLogout, loading }) {
         </div>
       </div>
       
-      {/* Subtle glow effect at bottom */}
+
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
     </nav>
   );
