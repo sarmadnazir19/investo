@@ -5,11 +5,11 @@ import { verifyAuthToken } from "../../lib/auth";
 
 export async function GET(req) {
   await connectToDatabase();
-  const cookie = req.cookies.get("auth")?.value;
+  const cookie = req.cookies.get("auth_token")?.value;
   if (!cookie) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
-  const { username } = verifyAuthToken(cookie);
+  const { username } = verifyAuthToken(cookie) || {};
   if (!username) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
