@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 export async function GET() {
   await connectToDatabase();
-  const users = await User.find({}, "username balance");
+  const users = await User.find({}, "username balance stocks");
   return NextResponse.json({ users });
 }
 

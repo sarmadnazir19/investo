@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, TrendingUp, LayoutDashboard } from "lucide-react";
+import { Users, TrendingUp, LayoutDashboard, Trophy } from "lucide-react";
 import Image from "next/image";
 
 export default function AdminNavbar() {
@@ -11,6 +11,7 @@ export default function AdminNavbar() {
     { href: "/admin/stocks", label: "Stocks", icon: TrendingUp },
     { href: "/admin/news", label: "News", icon: LayoutDashboard },
     { href: "/admin/livebids", label: "Live Bids", icon: TrendingUp },
+    { href: "/admin/leaderboard", label: "Leaderboard", icon: Trophy },
   ];
 
   return (
