@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-	const [username, setUsername] = useState("");
+	const [username, setusername] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const router = useRouter();
@@ -20,23 +20,31 @@ export default function LoginPage() {
 						body: JSON.stringify({ username, password }),
 						credentials: "include",
 					});
-					const data = await res.json();
+					
 					if (!res.ok) {
+						const data = await res.json().catch(() => ({ error: "Login failed" }));
 						setError(data.error || "Login failed");
 						return;
 					}
-					if (username === "StonksAdmin" && password === "StonksAdmin4321!") {
-						router.push("/admin");
+					
+					const data = await res.json();
+					if (data.success) {
+						if (username === "StonksAdmin" && password === "StonksAdmin4321!") {
+							router.push("/admin");
+						} else {
+							router.push("/dashboard");
+						}
 					} else {
-						router.push("/dashboard");
+						setError(data.error || "Login failed");
 					}
 				} catch (err) {
-					setError("Network error");
+					console.error("Login error:", err);
+					setError("Network error. Please check your connection and try again.");
 				}
 			};
 
 	return (
-		<main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white">
+		<main className="min-h-screen flex flex-col items-center justify-center font-sans text-white" style={{ backgroundColor: '#191919' }}>
 			<form className="bg-black/60 rounded-xl shadow-lg p-8 flex flex-col items-center w-full max-w-sm animate-fade-in" onSubmit={e => { e.preventDefault(); handleLogin(); }}>
 				<Image
 					src="/assets/emp.png"
@@ -48,7 +56,7 @@ export default function LoginPage() {
 				/>
 				<h2 className="text-2xl font-bold mb-6 text-white">Login</h2>
 				<div className="w-full mb-4">
-					<label htmlFor="username" className="block mb-2 text-sm font-medium text-white">Username</label>
+					<label htmlFor="username" className="block mb-2 text-sm font-medium text-white">username</label>
 					<input
 						type="text"
 						id="username"
@@ -56,8 +64,9 @@ export default function LoginPage() {
 						autoComplete="username"
 						required
 						value={username}
-						onChange={e => setUsername(e.target.value)}
-						className="w-full px-4 py-2 rounded-lg bg-purple-950 text-white border border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+						onChange={e => setusername(e.target.value)}
+						className="w-full px-4 py-2 rounded-lg text-white border focus:outline-none focus:ring-2 transition-all"
+						style={{ backgroundColor: '#191919', borderColor: '#cc980f' }}
 					/>
 				</div>
 				<div className="w-full mb-6">
@@ -70,16 +79,17 @@ export default function LoginPage() {
 						required
 						value={password}
 						onChange={e => setPassword(e.target.value)}
-						className="w-full px-4 py-2 rounded-lg bg-purple-950 text-white border border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+						className="w-full px-4 py-2 rounded-lg text-white border focus:outline-none focus:ring-2 transition-all"
+						style={{ backgroundColor: '#191919', borderColor: '#cc980f' }}
 					/>
 				</div>
 				{error && <div className="text-red-400 mb-4 text-sm">{error}</div>}
 				<Button
 					text="Login"
-					color="#4b006e"
-					textColor="#fff"
-					glowColor="#ff00cc"
-					rippleColor="rgba(255,255,255,0.2)"
+					color="#191919"
+					textColor="#cc980f"
+					glowColor="#cc980f"
+					rippleColor="rgba(204,152,15,0.2)"
 					onClick={handleLogin}
 				/>
 			</form>

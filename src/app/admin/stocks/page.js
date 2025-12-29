@@ -75,7 +75,7 @@ export default function StocksAdminPage() {
     setSuccess("");
     if (!selectedStock) return setError("Please select a stock");
     setLoading(true);
-    const stock = stocks.find(s => s._id === selectedStock);
+    const stock = stocks.find(s => s.id === selectedStock);
     const res = await fetch("/api/stocks", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ export default function StocksAdminPage() {
     setError("");
     setSuccess("");
     if (!selectedStock) return setError("Please select a stock");
-    const stock = stocks.find(s => s._id === selectedStock);
+    const stock = stocks.find(s => s.id === selectedStock);
     if (!confirm(`Are you sure you want to delete stock "${stock.StockName}"?`)) return;
     setLoading(true);
     const res = await fetch("/api/stocks", {
@@ -227,14 +227,14 @@ export default function StocksAdminPage() {
                           value={selectedStock}
                           onChange={(e) => {
                             setSelectedStock(e.target.value);
-                            const stock = stocks.find(s => s._id === e.target.value);
+                            const stock = stocks.find(s => s.id === e.target.value);
                             setUpdateValue(stock ? stock.StockValue : "");
                           }}
                           className="w-full px-4 py-3 rounded-lg bg-purple-900/50 text-white border border-purple-700 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
                         >
                           <option value="">Choose a stock</option>
                           {stocks.map(s => (
-                            <option key={s._id} value={s._id}>
+                            <option key={s.id} value={s.id}>
                               {s.StockName} (Current: ${s.StockValue})
                             </option>
                           ))}
@@ -270,7 +270,7 @@ export default function StocksAdminPage() {
                         >
                           <option value="">Choose a stock to delete</option>
                           {stocks.map(s => (
-                            <option key={s._id} value={s._id}>
+                            <option key={s.id} value={s.id}>
                               {s.StockName}
                             </option>
                           ))}
@@ -331,7 +331,7 @@ export default function StocksAdminPage() {
                   ) : (
                     stocks.map(s => (
                       <div
-                        key={s._id}
+                        key={s.id}
                         className="flex justify-between items-center p-3 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 transition-all border border-purple-700/30"
                       >
                         <span className="font-medium">{s.StockName}</span>

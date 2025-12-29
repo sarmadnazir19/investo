@@ -61,7 +61,7 @@ export default function AdminPage() {
     });
     const data = await res.json();
     setLoading(false);
-    if (res.status === 409) return setError("Username already exists");
+    if (res.status === 409) return setError("username already exists");
     if (!res.ok) return setError(data.error || "Failed to add user");
     setSuccess("User added successfully!");
     setNewUser({ username: "", password: "", balance: 10000 });
@@ -185,7 +185,7 @@ export default function AdminPage() {
                   <h2 className="text-2xl font-semibold mb-4">Add New User</h2>
                   <div className="flex flex-col gap-4">
                     <div>
-                      <label className="block text-sm text-purple-300 mb-1">Username</label>
+                      <label className="block text-sm text-purple-300 mb-1">username</label>
                       <input
                         type="text"
                         placeholder="Enter username"

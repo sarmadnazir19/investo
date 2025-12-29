@@ -7,16 +7,15 @@ export default function Navbar({ onLogout, loading }) {
   const pathname = usePathname();
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
-    { href: "/bids", label: "Live Bidding", icon: Gavel },
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-purple-950/95 via-purple-900/95 to-purple-950/95 border-b border-purple-700/30 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-purple-900/20">
+    <nav className="border-b backdrop-blur-md sticky top-0 z-50 shadow-lg" style={{ backgroundColor: '#191919', borderColor: '#cc980f' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 sm:h-18">
 
           <div className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm flex items-center justify-center border border-purple-500/30 shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all duration-300 group-hover:scale-110">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl backdrop-blur-sm flex items-center justify-center border shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: 'rgba(204,152,15,0.1)', borderColor: '#cc980f', boxShadow: '0 0 10px rgba(204,152,15,0.2)' }}>
               <Image 
                 src="/assets/emp.png" 
                 alt="Emp Logo" 
@@ -25,8 +24,8 @@ export default function Navbar({ onLogout, loading }) {
                 className="text-white transition-transform duration-300 group-hover:rotate-12" 
               />
             </div>
-            <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-300 bg-clip-text text-transparent drop-shadow-lg animate-gradient">
-              $TONK$ - JT Empressario'25
+            <span className="text-lg sm:text-xl font-bold drop-shadow-lg animate-gradient" style={{ color: '#cc980f' }}>
+              Investomania - ABC XIII
             </span>
           </div>
 
@@ -42,10 +41,11 @@ export default function Navbar({ onLogout, loading }) {
                   className={`
                     group flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl font-medium transition-all duration-300
                     ${isActive 
-                      ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/50 scale-105" 
-                      : "text-purple-300 hover:bg-white/5 hover:text-white hover:shadow-md hover:shadow-purple-500/20 hover:scale-105 border border-transparent hover:border-purple-500/30"
+                      ? "text-white shadow-lg scale-105" 
+                      : "hover:bg-white/5 hover:text-white hover:shadow-md hover:scale-105 border border-transparent"
                     }
                   `}
+                  style={isActive ? { backgroundColor: '#cc980f', color: '#191919', boxShadow: '0 0 10px rgba(204,152,15,0.5)' } : { color: '#cc980f' }}
                 >
                   <Icon size={18} className="group-hover:rotate-12 transition-transform duration-300" />
                   <span className="hidden sm:inline">{item.label}</span>
@@ -57,8 +57,8 @@ export default function Navbar({ onLogout, loading }) {
               <button
                 onClick={onLogout}
                 disabled={loading}
-                className="group flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-red-600/80 via-pink-600/80 to-purple-600/80 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-xl font-semibold shadow-lg shadow-pink-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ml-2 border border-pink-500/30 hover:scale-105 hover:shadow-pink-500/50 max-w-full overflow-x-hidden"
-                style={{ minWidth: 0 }}
+                className="group flex items-center gap-2 px-3 py-2 text-white rounded-xl font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ml-2 hover:scale-105 max-w-full overflow-x-hidden"
+                style={{ backgroundColor: '#cc980f', color: '#191919', borderColor: '#cc980f', boxShadow: '0 0 10px rgba(204,152,15,0.3)', minWidth: 0 }}
               >
                 <LogOut size={18} className={`${loading ? 'animate-spin' : 'group-hover:translate-x-1'} transition-transform duration-300`} />
                 <span className="hidden sm:inline">{loading ? 'Logging out...' : 'Logout'}</span>
@@ -69,7 +69,7 @@ export default function Navbar({ onLogout, loading }) {
       </div>
       
 
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #cc980f, transparent)' }}></div>
     </nav>
   );
 }

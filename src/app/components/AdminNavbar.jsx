@@ -15,7 +15,7 @@ export default function AdminNavbar() {
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-950 border-b border-purple-700/50 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="border-b backdrop-blur-sm sticky top-0 z-50" style={{ backgroundColor: '#191919', borderColor: '#cc980f' }}>
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
@@ -23,8 +23,8 @@ export default function AdminNavbar() {
             <div className="w-12 h-12 rounded-lg flex items-center justify-center">
               <Image src="/assets/emp.png" alt="Emp Logo" width={48} height={48} className="text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
-              $TONKS - JT Empressario'25
+            <span className="text-xl font-bold" style={{ color: '#cc980f' }}>
+              Investomania - ABC XIII
             </span>
           </div>
 
@@ -41,10 +41,11 @@ export default function AdminNavbar() {
                   className={`
                     flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
                     ${isActive 
-                      ? "bg-purple-600 text-white shadow-lg shadow-purple-500/50" 
-                      : "text-purple-300 hover:bg-purple-800/50 hover:text-white"
+                      ? "text-white shadow-lg" 
+                      : "hover:bg-white/5 hover:text-white"
                     }
                   `}
+                  style={isActive ? { backgroundColor: '#cc980f', color: '#191919', boxShadow: '0 0 10px rgba(204,152,15,0.5)' } : { color: '#cc980f' }}
                 >
                   <Icon size={18} />
                   <span className="hidden sm:inline">{item.label}</span>

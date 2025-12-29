@@ -93,7 +93,7 @@ export default function NewsAdminPage() {
     setError("");
     setSuccess("");
     if (!selectedNews) return setError("Please select a news article");
-    const article = news.find(n => n._id === selectedNews);
+    const article = news.find(n => n.id === selectedNews);
     if (!confirm(`Are you sure you want to delete "${article.title}"?`)) return;
     setLoading(true);
     const res = await fetch("/api/news", {
@@ -223,7 +223,7 @@ export default function NewsAdminPage() {
                           value={selectedNews}
                           onChange={(e) => {
                             setSelectedNews(e.target.value);
-                            const article = news.find(n => n._id === e.target.value);
+                            const article = news.find(n => n.id === e.target.value);
                             setUpdateTitle(article ? article.title : "");
                             setUpdateBody(article ? article.body : "");
                           }}
@@ -231,7 +231,7 @@ export default function NewsAdminPage() {
                         >
                           <option value="">Choose an article</option>
                           {news.map(n => (
-                            <option key={n._id} value={n._id}>
+                            <option key={n.id} value={n.id}>
                               {n.title}
                             </option>
                           ))}
@@ -280,7 +280,7 @@ export default function NewsAdminPage() {
                         >
                           <option value="">Choose an article to delete</option>
                           {news.map(n => (
-                            <option key={n._id} value={n._id}>
+                            <option key={n.id} value={n.id}>
                               {n.title}
                             </option>
                           ))}
@@ -334,7 +334,7 @@ export default function NewsAdminPage() {
                   ) : (
                     news.map(n => (
                       <div
-                        key={n._id}
+                        key={n.id}
                         className="p-3 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 transition-all border border-purple-700/30"
                       >
                         <div className="font-medium text-purple-100 mb-1">{n.title}</div>

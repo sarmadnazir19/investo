@@ -13,15 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Stonks - JT Empressario'25",
-  description: "The Website for Stonks - JT Empressario'25",
+  title: "Investomania - ABC XIII",
+  description: "The Website for Investomania - ABC XIII",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-black via-purple-900 to-purple-800 min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        style={{ backgroundColor: '#191919' }}
       >
         <div className="flex-1">
           {children}

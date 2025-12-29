@@ -6,7 +6,7 @@ import Button from "./components/Button";
 export default function LandingPage() {
   const router = useRouter();
   return (
-  <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-900 to-purple-800 font-sans text-white">
+  <main className="min-h-screen flex flex-col items-center justify-center font-sans text-white" style={{ backgroundColor: '#191919' }}>
       <div className="flex flex-col items-center gap-6 animate-fade-in">
         <div className="flex gap-8 items-center">
           <Image
@@ -18,19 +18,19 @@ export default function LandingPage() {
             priority
           />
         </div>
-        <h1 className="text-5xl text-red-500 md:text-6xl font-extrabold text-center tracking-tight animate-fade-in delay-300">
-          JT Empressario&apos;25 <span className="font-extrabold">$tonks</span>
+        <h1 className="text-5xl md:text-6xl font-extrabold text-center tracking-tight animate-fade-in delay-300" style={{ color: '#cc980f' }}>
+          ABC XIII <span className="font-extrabold">Investomania</span>
         </h1>
         <p className="text-lg md:text-xl max-w-xl text-center animate-fade-in delay-400">
-          Welcome to the official portal for $tonks for JT Empressario&#39;25.
+          Welcome to the official portal for Investomania for ABC XIII.
         </p>
         <div className="mt-6 animate-fade-in delay-500">
           <Button
             text="Login"
-            color="#2d014d"
-            textColor="#fff"
-            glowColor="#ff00cc"
-            rippleColor="rgba(255,255,255,0.2)"
+            color="#191919"
+            textColor="#cc980f"
+            glowColor="#cc980f"
+            rippleColor="rgba(204,152,15,0.2)"
             onClick={() => router.push("/login")}
           />
         </div>

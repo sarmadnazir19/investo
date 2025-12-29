@@ -247,7 +247,7 @@ export default function AdminLiveBidsPage() {
               <div className="space-y-3">
                 {bids.map(bid => (
                   <BidCard
-                    key={bid._id}
+                    key={bid.id}
                     bid={bid}
                     updateBid={updateBid}
                     awardBid={awardBid}
@@ -314,7 +314,7 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }
         <div className="flex flex-col gap-1.5 ml-3">
           {bid.status === "inactive" && (
             <button
-              onClick={() => updateBid(bid._id, "start")}
+              onClick={() => updateBid(bid.id, "start")}
               disabled={loading}
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 rounded-lg transition-all disabled:opacity-50 whitespace-nowrap"
             >
@@ -324,7 +324,7 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }
           )}
           {bid.status === "active" && (
             <button
-              onClick={() => updateBid(bid._id, "stop")}
+              onClick={() => updateBid(bid.id, "stop")}
               disabled={loading}
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-yellow-600 hover:bg-yellow-700 rounded-lg transition-all disabled:opacity-50 whitespace-nowrap"
             >
@@ -334,7 +334,7 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }
           )}
           {bid.status === "inactive" && (
             <button
-              onClick={() => awardBid(bid._id)}
+              onClick={() => awardBid(bid.id)}
               disabled={loading}
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 rounded-lg transition-all disabled:opacity-50 whitespace-nowrap"
             >
@@ -350,7 +350,7 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }
                 setTimeout(() => setShowConfirm(false), 3000);
               } else {
                 setShowConfirm(false);
-                deleteBid(bid._id);
+                deleteBid(bid.id);
               }
             }}
             disabled={loading}
@@ -366,7 +366,7 @@ function BidCard({ bid, updateBid, awardBid, fetchBidUsers, deleteBid, loading }
           <Users size={14} />
           <strong className="text-xs">User Bids</strong>
         </div>
-        <BidUsersList bidId={bid._id} fetchBidUsers={fetchBidUsers} />
+        <BidUsersList bidId={bid.id} fetchBidUsers={fetchBidUsers} />
       </div>
     </div>
   );

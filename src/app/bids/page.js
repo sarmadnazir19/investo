@@ -166,12 +166,12 @@ export default function LiveBidsPage() {
           <div className="grid md:grid-cols-2 gap-3">
             {activeBids.map(bid => (
               <BidCard
-                key={bid._id}
+                key={bid.id}
                 bid={bid}
                 user={user}
-                bidValue={bidValues[bid._id] || ""}
-                setBidValue={(value) => setBidValues(v => ({ ...v, [bid._id]: value }))}
-                onPlaceBid={() => placeBid(bid._id, bid.value * bid.quantity)}
+                bidValue={bidValues[bid.id] || ""}
+                setBidValue={(value) => setBidValues(v => ({ ...v, [bid.id]: value }))}
+                onPlaceBid={() => placeBid(bid.id, bid.value * bid.quantity)}
                 loading={loading}
               />
             ))}

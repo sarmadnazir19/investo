@@ -1,54 +1,132 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "../_db";
-import User from "../userModel";
+import { createServerClient } from "../../lib/supabase";
 import bcrypt from "bcryptjs";
 
 export async function GET() {
-  await connectToDatabase();
-  const users = await User.find({}, "username balance stocks");
-  return NextResponse.json({ users });
+	try {
+		const supabase = createServerClient();
+		
+		const { data: users, error } = await supabase
+			.from('users')
+			.select('username, balance, stocks');
+
+		if (error) {
+			console.error("Admin GET error:", error.message);
+			return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+		}
+
+		return NextResponse.json({ users: users || [] });
+	} catch (error) {
+		console.error("Admin GET error:", error);
+		return NextResponse.json({ error: "Network error" }, { status: 500 });
+	}
 }
 
 export async function POST(req) {
-  await connectToDatabase();
-  const { username, password, balance } = await req.json();
-  if (!username || !password || balance == null) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-  }
-  const existing = await User.findOne({ username });
-  if (existing) {
-    return NextResponse.json({ error: "Username already exists" }, { status: 409 });
-  }
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hashedPassword, balance, stocks: [] });
-  await user.save();
-  return NextResponse.json({ success: true, user: { username, balance } });
+	try {
+		const { username, password, balance } = await req.json();
+		
+		if (!username || !password || balance == null) {
+			return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+		}
+
+		const supabase = createServerClient();
+		
+		// Check if user exists
+		const { data: existing } = await supabase
+			.from('users')
+			.select('username')
+			.eq('username', username)
+			.single();
+
+		if (existing) {
+			return NextResponse.json({ error: "username already exists" }, { status: 409 });
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 10);
+		
+		const { data: user, error } = await supabase
+			.from('users')
+			.insert([{ username, password: hashedPassword, balance, stocks: [] }])
+			.select('username, balance')
+			.single();
+
+		if (error) {
+			console.error("Admin POST error:", error.message);
+			return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
+		}
+
+		return NextResponse.json({ success: true, user: { username: user.username, balance: user.balance } });
+	} catch (error) {
+		console.error("Admin POST error:", error);
+		return NextResponse.json({ error: "Network error" }, { status: 500 });
+	}
 }
 
 export async function PUT(req) {
-  await connectToDatabase();
-  const { username, balance, stocks } = await req.json();
-  if (!username || balance == null) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-  }
-  // If stocks is provided, update stocks array as well
-  let update = { balance };
-  if (stocks) {
-    update.stocks = stocks;
-  }
-  const user = await User.findOneAndUpdate({ username }, update, { new: true });
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
-  return NextResponse.json({ success: true, user: { username, balance: user.balance, stocks: user.stocks } });
+	try {
+		const { username, balance, stocks } = await req.json();
+		
+		if (!username || balance == null) {
+			return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+		}
+
+		const supabase = createServerClient();
+		
+		const updateData = { balance };
+		if (stocks) {
+			updateData.stocks = stocks;
+		}
+
+		const { data: user, error } = await supabase
+			.from('users')
+			.update(updateData)
+			.eq('username', username)
+			.select('username, balance, stocks')
+			.single();
+
+		if (error || !user) {
+			console.error("Admin PUT error:", error?.message);
+			return NextResponse.json({ error: "User not found" }, { status: 404 });
+		}
+
+		return NextResponse.json({ 
+			success: true, 
+			user: { 
+				username: user.username, 
+				balance: user.balance, 
+				stocks: user.stocks || [] 
+			} 
+		});
+	} catch (error) {
+		console.error("Admin PUT error:", error);
+		return NextResponse.json({ error: "Network error" }, { status: 500 });
+	}
 }
 
 export async function DELETE(req) {
-  await connectToDatabase();
-  const { username } = await req.json();
-  if (!username) {
-    return NextResponse.json({ error: "Missing username" }, { status: 400 });
-  }
-  await User.deleteOne({ username });
-  return NextResponse.json({ success: true });
+	try {
+		const { username } = await req.json();
+		
+		if (!username) {
+			return NextResponse.json({ error: "Missing username" }, { status: 400 });
+		}
+
+		const supabase = createServerClient();
+		
+		const { error } = await supabase
+			.from('users')
+			.delete()
+			.eq('username', username);
+
+		if (error) {
+			console.error("Admin DELETE error:", error.message);
+			return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
+		}
+
+		return NextResponse.json({ success: true });
+	} catch (error) {
+		console.error("Admin DELETE error:", error);
+		return NextResponse.json({ error: "Network error" }, { status: 500 });
+	}
 }

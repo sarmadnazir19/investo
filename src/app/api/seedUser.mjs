@@ -5,13 +5,9 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
 
-const MONGODB_URI = process.env.MONGODB_URI;
 
-async function seed() {
-  await mongoose.connect(MONGODB_URI);
-  const username = "StonksAdmin";
-  const password = "StonksAdmin4321!";
-  const hashedPassword = await bcrypt.hash(password, 10);
+
+
 
   const user = new User({
     username,

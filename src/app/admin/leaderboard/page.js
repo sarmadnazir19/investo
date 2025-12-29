@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
         .filter(user => user.username !== "StonksAdmin")
         .map(user => {
           const portfolioValue = (user.stocks || []).reduce((sum, holding) => {
-            const stock = stocksData.stocks.find(s => s._id === holding.stockId);
+            const stock = stocksData.stocks.find(s => s.id === holding.stockId);
             if (stock) {
               return sum + (stock.StockValue * holding.quantity);
             } else if (holding.stockId && holding.stockId.startsWith("bid:")) {

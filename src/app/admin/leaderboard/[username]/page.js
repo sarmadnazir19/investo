@@ -83,7 +83,7 @@ export default function UserDetailsPage() {
 
   // Calculate portfolio value
   const portfolioValue = (user.stocks || []).reduce((sum, holding) => {
-    const stock = stocks.find(s => s._id === holding.stockId);
+    const stock = stocks.find(s => s.id === holding.stockId);
     if (stock) {
       return sum + (stock.StockValue * holding.quantity);
     } else if (holding.stockId && holding.stockId.startsWith("bid:")) {
@@ -180,7 +180,7 @@ export default function UserDetailsPage() {
                 </thead>
                 <tbody>
                   {regularStocks.map((holding, index) => {
-                    const stock = stocks.find(s => s._id === holding.stockId);
+                    const stock = stocks.find(s => s.id === holding.stockId);
                     const currentValue = stock ? stock.StockValue * holding.quantity : 0;
 
                     return (
@@ -270,7 +270,7 @@ export default function UserDetailsPage() {
               {wonBids.map((bid) => {
                 const highestBid = bid.bids.reduce((max, b) => b.amount > max.amount ? b : max, bid.bids[0]);
                 return (
-                  <div key={bid._id} className="bg-black/30 rounded-lg p-4 border border-yellow-500/30">
+                  <div key={bid.id} className="bg-black/30 rounded-lg p-4 border border-yellow-500/30">
                     <h3 className="text-white font-bold mb-2">{bid.stockName}</h3>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
