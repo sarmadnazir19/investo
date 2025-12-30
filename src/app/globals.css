@@ -1,6 +1,15 @@
-@import "tailwindcss";
-
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html,
+body {
+  background-color: #191919;
+  color: white;
+}
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
 
 .font-sans {
 	font-family: 'Montserrat', 'Poppins', sans-serif;
