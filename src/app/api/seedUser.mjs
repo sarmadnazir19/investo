@@ -19,7 +19,7 @@ dotenv.config({ path: "./.env" });
   await user.save();
   console.log("Seeded user:", username);
   await mongoose.disconnect();
-}
+
 
 seed().catch((err) => {
   console.error("Seeding error:", err);
